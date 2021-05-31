@@ -120,34 +120,10 @@ export default class panelGroup extends Component {
     }
   }
 
-  async loadAccounts(type, options) {
-    let { rangeTotal } = await ApiHome.getHomeAccounts(type, options);
-    let { mainnetData, sunnetData, complexData } = this.state;
-    if (type == "mainnet") {
-      this.setState({
-        mainnetData: { ...mainnetData, totalAccounts: rangeTotal },
-        complexData: {
-          ...complexData,
-          totalAccounts: sunnetData.totalAccounts + rangeTotal
-        }
-      });
-    } else {
-      this.setState({
-        sunnetData: { ...sunnetData, totalAccounts: rangeTotal },
-        complexData: {
-          ...complexData,
-          totalAccounts: mainnetData.totalAccounts + rangeTotal
-        }
-      });
-    }
-  }
-
   async componentDidMount() {
     const { intl, setWebsocketSun } = this.props;
     const { mainnetData, sunnetData, complexData } = this.state;
     IS_MAINNET && setWebsocketSun();
-    IS_MAINNET && (await this.loadAccounts("mainnet", { limit: 1 }));
-    await this.loadAccounts("sunnet", { limit: 1 });
 
     this.reconnect();
     IS_MAINNET && (await this.loadHomepageBundle("mainnet"));
